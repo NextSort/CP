@@ -1,45 +1,64 @@
+
+
+
 #include <bits/stdc++.h>
+
+typedef long long ll;
+
+const int maxx=1000003;
+
 using namespace std;
 
-#define ll long long
-#define vi vector<int>
-#define pi pair<int, int>
-#define F first
-#define S second
-#define PB push_back
-#define len(s) (int)s.size()
-#define print(x) cout << x << "\n"
-#define REP(i, a, b) for (int i = a; i <= b; i++)
-#define all(a) (a).begin(), (a).end()
-#define endl '\n'
-#define FASTIO ios::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+int parent[maxx];
 
-template<typename S, typename T>
-void smax(S &a, const T &b) { if (a < b) a = b; }
-
-template<typename S, typename T>
-void smin(S &a, const T &b) { if (a > b) a = b; }
-
-const int MXN = 1e5 + 5, INF = 1e9 + 5;
-ll mod = 1000000007;
-
-void solve() {
-  int n;
-  cin>>n;
-
-    REP(i,0, n-1){
-        int k;
-        cin>>k;
-    }
+int find_parent(int u)
+{
+   if(parent[u]==u) return u;
+   int f=find_parent(parent[u]);
+   parent[u]=f;
+   return f;
 }
 
-int32_t main() {
-    FASTIO
-    int t = 1;
-    cin>>t;   
-    while (t--) {
-        solve();
+int main()
+{
+
+    int res=0;
+    int root=-1,n;
+    cin>>n;
+    int pa[n+1];
+    for(int i=0;i<=n;++i) parent[i]=i;
+
+	for(int i=1;i<=n;++i){
+		cin>>pa[i];
+		if(pa[i]==i) root=i;
+	}
+
+	for(int i=1;i<=n;i++)
+    {
+        /// root of a tree
+        if(i==root) continue;
+
+        int fc=find_parent(i);
+        int fp=find_parent(pa[i]);
+
+        /// legal ,as fc and fp are not connected
+        if(fc!=fp) parent[fc]=fp;
+
+        /// illegal ,so change
+        /// make father of root as parent of i node 
+        else
+        {
+            res++;
+            if(root==-1) root=i;
+            parent[fc]=find_parent(root);
+            pa[i]=parent[fc];
+
+        }
+
     }
+
+    cout<<res<<endl;
+    for(int i=1;i<=n;i++) cout<<pa[i]<<" ";
 
     return 0;
 }
